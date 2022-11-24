@@ -15,8 +15,9 @@ class MarvelListViewModel : NSObject {
     
     var result:Box<Result> = Box(nil)
     
-    
+    /*
     func fetchMarvelListData(){
+        
         let apiService  = APIService()
         
         
@@ -31,5 +32,6 @@ class MarvelListViewModel : NSObject {
             self.result.value = data
         })
     }
+    */
     
 }

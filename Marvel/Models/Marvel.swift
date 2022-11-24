@@ -90,7 +90,6 @@ struct Stories: Codable {
             self.items.append(StoriesItem(data: storyitem))
         }
     }
-    
 }
 
 struct StoriesItem: Codable {
@@ -101,5 +100,33 @@ struct StoriesItem: Codable {
         self.resourceURI = data[""] as? String ?? ""
         self.name = data["name"] as? String ?? ""
     }
-    
 }
+
+struct resultItem : Codable {
+
+    let offset,limit,count:Int
+    let items:[Item]
+    
+    init(item:[Item] , offset:Int,limit:Int, count:Int){
+        self.items = item
+        self.offset = offset
+        self.limit = limit
+        self.count = count
+    }
+     
+
+}
+
+struct Item: Codable {
+    let id: Int
+    let title: String
+    let thumbnail :String
+    init(data:[String:Any]){
+        self.id = data["id"] as? Int ?? 0
+        self.title = data["title"] as? String ?? ""
+        let thumb = data["thumbnail"] as? [String:Any] ?? [:]
+        thumbnail = "\(thumb["path"] as? String ?? "").\(thumb["extension"] as? String ?? "" )"
+    }
+}
+
+
