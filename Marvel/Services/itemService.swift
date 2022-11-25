@@ -17,20 +17,20 @@ class itemService:itemServiceProtocol {
     
     func getItemWithCharacterId(characterId: Int = 0,type:String = "" , url : String = "", completion: @escaping (Bool, resultItem?, String?)->()) {
         let apiUrl = "\(sourcesURL)/\(characterId)/\(url)"
-        var parameters = ["ts":apiParameters.ts.rawValue,"apikey":apiParameters.apiKey.rawValue,"hash":apiParameters.hashKey.rawValue]
+        let parameters = ["ts":apiParameters.ts.rawValue,"apikey":apiParameters.apiKey.rawValue,"hash":apiParameters.hashKey.rawValue]
         
         AF.request(apiUrl , method: .get,parameters: parameters).responseJSON{
             (response) in
             
-            print(response.value)
+            print(response.value as Any)
             
             if let results = response.value as? [String:Any]{
                 DispatchQueue.main.async {
                     
-                    guard let status = results["status"] as? String else {return completion(false,self.emptyData, nil) }
+                    guard results["status"] is String else {return completion(false,self.emptyData, nil) }
                     
                     guard let data = results["data"] as? [String:AnyObject] else {return completion(false,self.emptyData, nil) }
-                    guard let result = data["results"] as? [[String: Any]] else {return completion(false,self.emptyData, nil) }
+                    guard data["results"] is [[String: Any]] else {return completion(false,self.emptyData, nil) }
                     
                     completion(true,self.populateListFrom(data: data), nil)
 

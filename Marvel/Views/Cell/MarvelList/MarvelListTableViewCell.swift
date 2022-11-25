@@ -28,7 +28,6 @@ class MarvelListTableViewCell: UITableViewCell {
     
     public func configure(with item : Marvel){
         
-        print(URL(string: item.thumbnail))
         
         self.nameLabel.text = item.name
         self.iconImg.sd_setImage(with: URL(string: item.thumbnail), placeholderImage: UIImage(named: "loading"))

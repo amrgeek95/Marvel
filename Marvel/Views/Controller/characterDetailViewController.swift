@@ -47,28 +47,25 @@ class characterDetailViewController: UIViewController , UITableViewDelegate , UI
         self.listTableView.reloadData()
         self.characterDetailVM.Stories.bind({
             [weak self] list in
-            print(list?.items)
             
-            if let list = list {
+            if list != nil {
                 self?.listTableView.reloadSections(IndexSet(integer: 2), with: .none)
             }
         })
         
         self.characterDetailVM.Comics.bind({
             [weak self] list in
-            print(list?.items)
             
-            if let list = list {
+            if list != nil {
                 self?.listTableView.reloadSections(IndexSet(integer: 1), with: .none)
             }
         })
         
         self.characterDetailVM.Series.bind({
             [weak self] list in
-            print(list?.items)
             
-            if let list = list {
-                
+            if list != nil {
+
                 self?.listTableView.reloadSections(IndexSet(integer: 3), with: .none)
             }
         })
@@ -142,9 +139,7 @@ extension characterDetailViewController {
 
             default:
                 return 0
-            }
-            
-            return  0
+            }            
         }
     }
 }

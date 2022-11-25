@@ -18,25 +18,34 @@ class CharactersService: CharactersServiceProtocol {
     func getMarvelList(completion: @escaping (Bool, Result?, String?) -> ()) {
         
         
-        var parameters = ["ts":apiParameters.ts.rawValue,"apikey":apiParameters.apiKey.rawValue,"hash":apiParameters.hashKey.rawValue]
+        if !Connectivity.isConnectedToInternet {
+            completion(false,self.emptyListData, "Please check your internet connection")
+            return
+         }
+
         
-        print(parameters)
+        let parameters = ["ts":apiParameters.ts.rawValue,"apikey":apiParameters.apiKey.rawValue,"hash":apiParameters.hashKey.rawValue]
+        
+        
         
         AF.request(sourcesURL,method: .get, parameters: parameters).responseJSON {
             (response) in
             
-            print(response.value)
             
             if let results = response.value as? [String:Any]{
                 DispatchQueue.main.async {
                     
-                    guard let status = results["status"] as? String else {return completion(false,self.emptyListData, nil) }
+                    if results["code"] is Int {
+                        guard results["status"] is String else {return completion(false,self.emptyListData, "") }
+                        
+                        guard let data = results["data"] as? [String:AnyObject] else {return completion(false,self.emptyListData, nil) }
+                        guard data["results"] is [[String: Any]] else {return completion(false,self.emptyListData, nil) }
+                        
+                        completion(true,self.populateListFrom(data: data), nil)
+                    }else{
+                        completion(false,self.emptyListData, results["code"] as? String ?? "")
+                    }
                     
-                    guard let data = results["data"] as? [String:AnyObject] else {return completion(false,self.emptyListData, nil) }
-                    guard let result = data["results"] as? [[String: Any]] else {return completion(false,self.emptyListData, nil) }
-                    
-                    completion(true,self.populateListFrom(data: data), nil)
-
                 }
             }else{
                 completion(false,self.emptyListData, nil)

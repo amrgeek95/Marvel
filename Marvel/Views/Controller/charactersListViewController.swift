@@ -19,7 +19,15 @@ class charactersListViewController: UIViewController , UITableViewDelegate , UIT
         super.viewDidLoad()
         setDelegate()
         self.charactersListVM = charactersListViewModel()
-        self.charactersListVM.getCharacters()
+        
+        self.charactersListVM.getCharacters{
+            
+            status,message in 
+            if status == false {
+                self.showToast(controller: self, message: message ?? "", seconds: 1.5)
+            }
+        }
+        
         
         setBinder()
         
@@ -30,7 +38,6 @@ class charactersListViewController: UIViewController , UITableViewDelegate , UIT
         
         self.charactersListVM.result.bind({
             [weak self] list in
-            print(list)
             if let list = list {
                 if list.marvels.isEmpty {
                     self?.animateView(view: self!.notFoundView, hidden: false)
